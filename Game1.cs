@@ -1,6 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using FarmSimulator.Managers.MapManager;
+using FarmSimulator.Managers.MapLoader;
+using System.Runtime.CompilerServices;
+using System.IO;
+using System;
+
 
 namespace FarmSimulator
 {
@@ -8,12 +15,19 @@ namespace FarmSimulator
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        
+        private MapManager _mapManager;
+        
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _mapManager = new MapManager(); //Initializing the Map Manager.
+
+
         }
 
         protected override void Initialize()
@@ -27,6 +41,11 @@ namespace FarmSimulator
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            string _mapPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Maps", "Map.json");
+
+
+            _mapManager.GettingStarted(_mapPath);
+            
             // TODO: use this.Content to load your game content here
         }
 
@@ -42,7 +61,7 @@ namespace FarmSimulator
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
