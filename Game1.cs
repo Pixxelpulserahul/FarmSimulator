@@ -45,7 +45,9 @@ namespace FarmSimulator
 
 
             _mapManager.GettingStarted(_mapPath);
-            
+
+            _mapManager.Print();
+
             // TODO: use this.Content to load your game content here
         }
 

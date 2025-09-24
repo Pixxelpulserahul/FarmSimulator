@@ -35,7 +35,11 @@ namespace FarmSimulator.Managers.MapLoader
 
                 // Here processing the raw Json files to usable dictionary using Process Data function
                 mapData = ProcessMapData(rawJson);
-
+                //mapData = rawJson.ToObject<Dictionary<string, object>>();
+                if (mapData.Count == 0)
+                {
+                    Console.WriteLine(mapData);
+                }
 
             }
             catch (JsonException ex)
@@ -50,27 +54,33 @@ namespace FarmSimulator.Managers.MapLoader
             }
             return true;
         }
-        // This Function recieves the raw json and converting it into usable dictionary..
+
+        //Processing the json data into usable dictionary
         private Dictionary<string, object> ProcessMapData(JObject json)
         {
-            var processData = new Dictionary<string, object>();
+            if (json == null) throw new ArgumentNullException(nameof(json));
+
+            var processData = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var property in json.Properties())
             {
-
                 string key = property.Name;
                 object value = ConvertJtokenToObject(property.Value);
 
+                processData[key] = value;    // or processData.Add(key, value);
             }
 
             return processData;
         }
+
+
 
         private object ConvertJtokenToObject(JToken Token)
         {
             switch (Token.Type)
             {
                 case JTokenType.Object:
+                    //Console.WriteLine(Token);
                     var dict = new Dictionary<string, object>();
                     foreach (var property in ((JObject)Token).Properties())
                     {
@@ -99,7 +109,7 @@ namespace FarmSimulator.Managers.MapLoader
 
         public Dictionary<string, object> GetMapData()
         {
-            return new Dictionary<string, object>(mapData);
+            return mapData;
         }
 
         public bool Load(string path)
