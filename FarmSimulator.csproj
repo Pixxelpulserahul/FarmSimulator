@@ -10,28 +10,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Content\bin\DesktopGL\Content\Tiles\**" />
-    <Compile Remove="Content\bin\DesktopGL\Tiles\**" />
-    <Compile Remove="Content\obj\DesktopGL\net8.0\Content\Tiles\**" />
-    <Compile Remove="Content\obj\DesktopGL\Tiles\**" />
-    <Compile Remove="Content\Tiles\**" />
-    <EmbeddedResource Remove="Content\bin\DesktopGL\Content\Tiles\**" />
-    <EmbeddedResource Remove="Content\bin\DesktopGL\Tiles\**" />
-    <EmbeddedResource Remove="Content\obj\DesktopGL\net8.0\Content\Tiles\**" />
-    <EmbeddedResource Remove="Content\obj\DesktopGL\Tiles\**" />
-    <EmbeddedResource Remove="Content\Tiles\**" />
-    <None Remove="Content\bin\DesktopGL\Content\Tiles\**" />
-    <None Remove="Content\bin\DesktopGL\Tiles\**" />
-    <None Remove="Content\obj\DesktopGL\net8.0\Content\Tiles\**" />
-    <None Remove="Content\obj\DesktopGL\Tiles\**" />
-    <None Remove="Content\Tiles\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Assets\Maps\Map.json" />
-    <None Remove="Icon.ico" />
-    <None Remove="Icon.bmp" />
-  </ItemGroup>
+	<ItemGroup>
+		<MonoGameContentReference Include="Content\Content.mgcb" />
+	</ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Maps\Map.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -51,9 +32,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Content\Content.mgcb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\bin\DesktopGL\Content\" />

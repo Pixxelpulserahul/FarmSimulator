@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarmSimulator.Managers.MapLoader
 {
@@ -31,10 +32,16 @@ namespace FarmSimulator.Managers.MapLoader
                     return false;
                 }
                 string jsonContent = File.ReadAllText(MapFilePath);
+                
+                
                 rawJson = JObject.Parse(jsonContent);
 
                 // Here processing the raw Json files to usable dictionary using Process Data function
+
+
                 mapData = ProcessMapData(rawJson);
+                
+                
                 //mapData = rawJson.ToObject<Dictionary<string, object>>();
                 if (mapData.Count == 0)
                 {
@@ -53,7 +60,11 @@ namespace FarmSimulator.Managers.MapLoader
                 return false;
             }
             return true;
+
+
         }
+
+
 
         //Processing the json data into usable dictionary
         private Dictionary<string, object> ProcessMapData(JObject json)
@@ -72,6 +83,8 @@ namespace FarmSimulator.Managers.MapLoader
 
             return processData;
         }
+        
+
 
 
 

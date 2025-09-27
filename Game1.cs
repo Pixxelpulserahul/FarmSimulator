@@ -18,7 +18,7 @@ namespace FarmSimulator
         
         private MapManager _mapManager;
         
-
+        Texture2D _texture;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -46,7 +46,31 @@ namespace FarmSimulator
 
             _mapManager.GettingStarted(_mapPath);
 
-            _mapManager.Print();
+            //_mapManager.Print();
+
+            try
+            {
+                    _texture = Content.Load<Texture2D>("Tiles/Doors");
+                if( _texture != null )
+                {
+                    Console.WriteLine("Texture loaded successfully");
+                }
+                else
+                {
+                    Console.WriteLine("Misson Failed");
+                }
+            }
+            catch ( Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            int height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            int width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+
+            Console.WriteLine($"Width = {width} // Height = {height}");
+
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -64,6 +88,10 @@ namespace FarmSimulator
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_texture, new Vector2(100, 100), Color.White);
+            _spriteBatch.End();
 
             // TODO: Add your drawing code here
 

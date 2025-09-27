@@ -9,6 +9,7 @@ using FarmSimulator.Managers.MapLoader;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
+using System.Data;
 
 
 
@@ -17,6 +18,10 @@ namespace FarmSimulator.Managers.MapManager
     public class MapManager
     {
         private MapLoader.MapLoader _mapLoader;
+
+        //This has to be fixed according to map layers and size of the map if anything changes in the map data you have to change it here too..
+        private int[,,] tiles = new int[8, 200, 300];
+
 
         private Dictionary<string, object> _map;
         
@@ -29,6 +34,8 @@ namespace FarmSimulator.Managers.MapManager
 
         private void FetchData(string Path)
         {
+           
+            // This Block is just calling a function that is loading the map from the system.
             bool dict = _mapLoader.Load(Path);
             if(dict)
             {
@@ -44,32 +51,25 @@ namespace FarmSimulator.Managers.MapManager
 
         }
 
-        public void Print()
-        {
-
-            try
-            {
-                var dict = ((List<object>)_map["layers"]).ToArray();
-
-                foreach (var item in dict)
-                {
-                    Array dict2 = ((List<object>)(((Dictionary<string, object>)item)["data"])).ToArray(); //accessing the data of each layer
-                    Console.WriteLine(dict2.Length);
-                }
-
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-
-
         public void GettingStarted(String Path)
         {
             this.FetchData(Path);
+        }        
+        
+
+
+        // The work of this function is to extract the Tiles data and convert it into usable list.
+        public void ExtractTilesData()
+        {
+
+            foreach(var item in _map)
+            {
+                Console.WriteLine($"{(string)item.Key}");
+            }
+
+
         }
+
 
     }
 }
