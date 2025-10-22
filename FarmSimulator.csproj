@@ -14,11 +14,6 @@
 		<MonoGameContentReference Include="Content\Content.mgcb" />
 	</ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Maps\Map.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Icon.ico">
       <LogicalName>Icon.ico</LogicalName>
     </EmbeddedResource>
@@ -32,6 +27,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\Maps\Map.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Maps\Map.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\bin\DesktopGL\Content\" />

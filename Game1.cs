@@ -51,14 +51,9 @@ namespace FarmSimulator
             try
             {
                     _texture = Content.Load<Texture2D>("Tiles/Doors");
-                if( _texture != null )
-                {
-                    Console.WriteLine("Texture loaded successfully");
-                }
-                else
-                {
-                    Console.WriteLine("Misson Failed");
-                }
+                
+
+
             }
             catch ( Exception e)
             {
