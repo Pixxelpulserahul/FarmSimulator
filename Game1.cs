@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using FarmSimulator.Managers.Camera;
+using FarmSimulator.Managers.MapLoader;
+using FarmSimulator.Managers.MapManager;
+using FarmSimulator.Managers.PlayerManager;
+using FarmSimulator.Managers.TileHandler;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using FarmSimulator.Managers.MapManager;
-using FarmSimulator.Managers.MapLoader;
-using System.Runtime.CompilerServices;
-using System.IO;
-using System;
-
 
 namespace FarmSimulator
 {
@@ -15,59 +19,84 @@ namespace FarmSimulator
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        
+
+        private Dictionary<string, TileInfo> spritesData;
+        private Dictionary<string, Texture2D> sprites;
+        private Dictionary<string, int[,]> tileArranData;
+
+        int tileSize;
+
+        const int mapWidth = 300;
+        const int mapHeight = 200;
+
         private MapManager _mapManager;
-        
-        Texture2D _texture;
+        private Camera _camera;
+        private PlayerManager _player;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            _mapManager = new MapManager();
 
-            _mapManager = new MapManager(); //Initializing the Map Manager.
-
-
+            tileSize = 16;
+            sprites = new Dictionary<string, Texture2D>();
+            tileArranData = new Dictionary<string, int[,]>();
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            _camera = new Camera(
+                _graphics.GraphicsDevice.Viewport.Width,
+                _graphics.GraphicsDevice.Viewport.Height
+            );
+            Console.WriteLine(_graphics.GraphicsDevice.Viewport.Width);
+            Console.WriteLine(_graphics.GraphicsDevice.Viewport.Height);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
             string _mapPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Maps", "Map.json");
 
+            Texture2D playerSheet = Content.Load<Texture2D>("Player/Player");
+
+            // Spritesheet frames are 32x32, but we'll scale to 16x16
+            int frameW = 32;
+            int frameH = 32;
+
+            _player = new PlayerManager(
+                playerSheet,
+                new Vector2(200, 200),
+                frameW,
+                frameH
+            );
 
             _mapManager.GettingStarted(_mapPath);
-
-            //_mapManager.Print();
+            spritesData = _mapManager.getTileData();
+            tileArranData = _mapManager.getTileArranData();
 
             try
             {
-                    _texture = Content.Load<Texture2D>("Tiles/Doors");
-                
-
-
+                if (spritesData != null)
+                {
+                    foreach (var item in spritesData)
+                    {
+                        if (!item.Value.isCollection)
+                        {
+                            Texture2D temp = Content.Load<Texture2D>(item.Value.ImagePath.Split(".png")[0]);
+                            Console.WriteLine(item.Value.ImagePath.Split(".png")[0]);
+                            sprites.Add(item.Value.TileSetName, temp);
+                        }
+                    }
+                }
             }
-            catch ( Exception e)
+            catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(e.Message);
             }
-
-            int height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            int width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-
-            Console.WriteLine($"Width = {width} // Height = {height}");
-
-
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -75,22 +104,105 @@ namespace FarmSimulator
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            KeyboardState keyState = Keyboard.GetState();
+
+            // Define map bounds for player
+            Rectangle mapBounds = new Rectangle(0, 0, mapWidth * tileSize, mapHeight * tileSize);
+
+            // Update player (handles movement and animation)
+            _player.Update(gameTime, mapBounds);
+
+            // Update camera to follow player
+            UpdateCameraFollowPlayer();
+
+            // Debug key
+            if (keyState.IsKeyDown(Keys.P))
+            {
+                Console.WriteLine($"CameraPosition: {_camera.position}");
+                Console.WriteLine($"PlayerPosition: {_player.position}");
+            }
 
             base.Update(gameTime);
+        }
+
+        private void UpdateCameraFollowPlayer()
+        {
+            // Calculate the center of the viewport
+            float viewportCenterX = _camera.viewPortWidth / 2f;
+            float viewportCenterY = _camera.viewPortHeight / 2f;
+
+            // Calculate desired camera position (centered on player)
+            float desiredCameraX = _player.position.X - viewportCenterX;
+            float desiredCameraY = _player.position.Y - viewportCenterY;
+
+            // Clamp camera to map boundaries
+            float maxCameraX = (mapWidth * tileSize) - _camera.viewPortWidth;
+            float maxCameraY = (mapHeight * tileSize) - _camera.viewPortHeight;
+
+            _camera.position.X = MathHelper.Clamp(desiredCameraX, 0, maxCameraX);
+            _camera.position.Y = MathHelper.Clamp(desiredCameraY, 0, maxCameraY);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(_texture, new Vector2(100, 100), Color.White);
+            Matrix transformMatrix = Matrix.CreateTranslation(-_camera.position.X, -_camera.position.Y, 0);
+            _spriteBatch.Begin(transformMatrix: transformMatrix, samplerState: SamplerState.PointClamp);
+
+            drawMap(tileArranData);
+            _player.Draw(_spriteBatch);
+
             _spriteBatch.End();
-
-            // TODO: Add your drawing code here
-
             base.Draw(gameTime);
+        }
+
+        private void drawMap(Dictionary<string, int[,]> tileArranData)
+        {
+            foreach (var layer in tileArranData)
+            {
+                int[,] map = layer.Value;
+                string layerName = layer.Key;
+                TileInfo info = spritesData[layerName];
+
+                if (info.isCollection == false)
+                {
+                    Texture2D tempTexture = sprites[layerName];
+                    int startx = (int)(_camera.position.X / tileSize);
+                    int starty = (int)(_camera.position.Y / tileSize);
+
+                    int tilex = (_camera.viewPortWidth / tileSize) + 2;
+                    int tiley = (_camera.viewPortHeight / tileSize) + 2;
+
+                    startx = Math.Max(0, startx);
+                    starty = Math.Max(0, starty);
+
+                    int endx = Math.Min(mapWidth, startx + tilex);
+                    int endy = Math.Min(mapHeight, starty + tiley);
+
+                    int tilesPerRow = info.width / tileSize;
+
+                    for (int y = starty; y < endy; y++)
+                    {
+                        for (int x = startx; x < endx; x++)
+                        {
+                            int gid = map[y, x];
+                            if (gid == 0) continue;
+
+                            int localId = gid - info.firstGID;
+
+                            int srcx = (localId % tilesPerRow) * tileSize;
+                            int srcy = (localId / tilesPerRow) * tileSize;
+
+                            Vector2 worldPos = new Vector2(x * tileSize, y * tileSize);
+
+                            Rectangle sourceRect = new Rectangle(srcx, srcy, tileSize, tileSize);
+
+                            _spriteBatch.Draw(tempTexture, worldPos, sourceRect, Color.White);
+                        }
+                    }
+                }
+            }
         }
     }
 }

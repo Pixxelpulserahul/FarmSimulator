@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
 using System.Data;
-using FarmSimulator.Managers.TextureLoader;
-
 
 
 namespace FarmSimulator.Managers.MapManager
@@ -21,17 +19,13 @@ namespace FarmSimulator.Managers.MapManager
     {
         private MapLoader.MapLoader _mapLoader;
         private TileHandler.TileHandler _tileHandler;
-        private TileLoader _tileLoader;
-
 
         //This has to be fixed according to map layers and size of the map if anything changes in the map data you have to change it here too..
-        private const int layerCnt = 13;
+        private const int layerCnt = 12;
         private const int mapHeight = 200;
         private const int mapWidth = 300;
 
-
-        private int[,,] tiles;
-
+        private Dictionary<string, int[,]> tilesArranData;
 
         private Dictionary<string, object> _map;
         private Dictionary<int, TileInfo> _tileDict;
@@ -43,7 +37,7 @@ namespace FarmSimulator.Managers.MapManager
             this._mapLoader = new MapLoader.MapLoader();
             this._map = new Dictionary<string, object>();
             this._tileDict = new Dictionary<int, TileInfo>();
-            this.tiles = new int[layerCnt, mapWidth, mapHeight];
+            this.tilesArranData = new Dictionary<string, int[,]>();
         }
 
 
@@ -58,10 +52,9 @@ namespace FarmSimulator.Managers.MapManager
                 this._map = _mapLoader.GetMapData();
                 this.ConvertToMatrix(_map);
 
+
                 _tileHandler.BuildDictionary((List<object>)_map["tilesets"]);
 
-
-                _tileLoader.loadTilesToArray(_tileHandler.getTileData());
             }
             else
             {
@@ -69,6 +62,10 @@ namespace FarmSimulator.Managers.MapManager
             }
         }
 
+        public Dictionary<string, TileInfo> getTileData()
+        {
+            return _tileHandler.getTileData();
+        }
 
         public void GettingStarted(String Path)
         {
@@ -84,20 +81,25 @@ namespace FarmSimulator.Managers.MapManager
                 for (int i = 0; i < layerCnt; i++)
                 {
                     List<object> tileArr = (List<object>)(((Dictionary<string, object>)(((List<object>)map["layers"])[i]))["data"]);
+                    
                     //Console.WriteLine($"{tileArr[2]}");
+                    
+                    string name = (string)((Dictionary<string, object>)((List<object>)map["layers"])[i])["name"];
 
+                    int[,] matric = new int[mapHeight, mapWidth];
                     for (int y = 0; y < mapHeight; y++)
                     {
 
-                        for (int x = 0; x < mapHeight; x++)
+                        for (int x = 0; x < mapWidth; x++)
                         {
-                            int index = y * mapHeight + x;
-                            this.tiles[i, y, x] = (int)tileArr[index];
-
+                            int index = y * mapWidth + x;
+                            matric[y, x] = (int)(tileArr[index]);
                         }
+                        
                     }
+                    
+                    tilesArranData.Add(name, matric);
                 }
-
             }
             catch (Exception e)
             {
@@ -107,6 +109,13 @@ namespace FarmSimulator.Managers.MapManager
             }
 
         }
+
+        public Dictionary<string, int[,]> getTileArranData()
+        {
+            return tilesArranData;
+        }
+
+
     }
 
 

@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Tiles/Basic_Grass_Biom_things.png
+#begin Player/Player.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,7 +23,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/Basic_Grass_Biom_things.png
+/build:Player/Player.png
+
+#begin Tiles/Basic_Grass_Biom_things/Basic_Grass_Biom_things.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tiles/Basic_Grass_Biom_things/Basic_Grass_Biom_things.png;Tiles/Basic_Grass_Biom_things/Basic_Grass_Biom_things
 
 #begin Tiles/Decor/1.png
 /importer:TextureImporter
@@ -229,7 +241,7 @@
 /processorParam:TextureFormat=Color
 /build:Tiles/Decor/9.png
 
-#begin Tiles/Doors.png
+#begin Tiles/Doors/Doors.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -239,9 +251,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/Doors.png
+/build:Tiles/Doors/Doors.png;Tiles/Doors/Doors
 
-#begin Tiles/FarmLand_Tile.png
+#begin Tiles/FarmLand_Tile/FarmLand_Tile.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -251,9 +263,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/FarmLand_Tile.png
+/build:Tiles/FarmLand_Tile/FarmLand_Tile.png;Tiles/FarmLand_Tile/FarmLand_Tile
 
-#begin Tiles/Fences.png
+#begin Tiles/Fences/Fences.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -263,9 +275,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/Fences.png
+/build:Tiles/Fences/Fences.png;Tiles/Fences/Fences
 
-#begin Tiles/Grass.png
+#begin Tiles/Grass/Grass.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -275,9 +287,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/Grass.png
+/build:Tiles/Grass/Grass.png;Tiles/Grass/Grass
 
-#begin Tiles/Hills.png
+#begin Tiles/Paths/Paths.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -287,19 +299,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/Hills.png
-
-#begin Tiles/Paths.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tiles/Paths.png
+/build:Tiles/Paths/Paths.png;Tiles/Paths/Paths
 
 #begin Tiles/Shops/1.png
 /importer:TextureImporter
@@ -349,7 +349,7 @@
 /processorParam:TextureFormat=Color
 /build:Tiles/Shops/4.png
 
-#begin Tiles/Tilled_Dirt.png
+#begin Tiles/Tilled_Dirt/Tilled_Dirt.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -359,7 +359,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/Tilled_Dirt.png
+/build:Tiles/Tilled_Dirt/Tilled_Dirt.png;Tiles/Tilled_Dirt/Tilled_Dirt
 
 #begin Tiles/Trees/Tree_01.png
 /importer:TextureImporter
@@ -384,78 +384,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Tiles/Trees/Tree_02.png
-
-#begin Tiles/VillageHouse/1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tiles/VillageHouse/1.png
-
-#begin Tiles/VillageHouse/2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tiles/VillageHouse/2.png
-
-#begin Tiles/VillageHouse/3.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tiles/VillageHouse/3.png
-
-#begin Tiles/VillageHouse/4.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tiles/VillageHouse/4.png
-
-#begin Tiles/VillageHouse/5.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tiles/VillageHouse/5.png
-
-#begin Tiles/VillageHouse/6.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tiles/VillageHouse/6.png
 
 #begin Tiles/VillageHouse/House_1.png
 /importer:TextureImporter
@@ -505,7 +433,7 @@
 /processorParam:TextureFormat=Color
 /build:Tiles/VillageHouse/House_4.png
 
-#begin Tiles/Water.png
+#begin Tiles/Water/Water.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -515,9 +443,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/Water.png
+/build:Tiles/Water/Water.png;Tiles/Water/Water
 
-#begin Tiles/Wooden_House_Walls_Tilset.png
+#begin Tiles/Wooden_House_Walls_Tilset/Wooden_House_Walls_Tilset.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -527,5 +455,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/Wooden_House_Walls_Tilset.png
+/build:Tiles/Wooden_House_Walls_Tilset/Wooden_House_Walls_Tilset.png;Tiles/Wooden_House_Walls_Tilset/Wooden_House_Walls_Tilset
 

@@ -15,14 +15,17 @@ namespace FarmSimulator.Managers.TileHandler
         public string ImagePath { get; private set; }
         public int firstGID { get; private set; }
         public bool isCollection { get; private set; }
+        public int width { get; private set; }
+        public int height { get; private set; }
 
-
-        public TileInfo(int firstGID, string name, string path, bool isCollection)
+        public TileInfo(int firstGID, string name, string path, bool isCollection, int width, int height)
         {
             this.TileSetName = name;
             this.ImagePath = path;
             this.isCollection = isCollection;
             this.firstGID = firstGID;
+            this.width = width;
+            this.height = height;
         }
     }
 
@@ -30,7 +33,7 @@ namespace FarmSimulator.Managers.TileHandler
     {
         public List<string> tileNames { get; private set; }
 
-        public TileCollectionInfo(int firstGID, string name, string path, bool isCollection, List<string> tileNames) : base(firstGID, name, path, isCollection)
+        public TileCollectionInfo(int firstGID, string name, string path, bool isCollection, List<string> tileNames) : base(firstGID, name, path, isCollection, 0, 0)
         {
             this.tileNames = tileNames;
         }
@@ -61,17 +64,13 @@ namespace FarmSimulator.Managers.TileHandler
                     try
                     {
                         string name = (string)lun["name"];
-                        //Console.WriteLine(name);
                         List<string> names = new List<string>();
-
-                        //Console.WriteLine(lun["firstgid"]);
 
                         //This block of code extract the name of the images and save it into a list so we can use it later..
                         foreach(var item in ((List<object>)lun["tiles"]))  
                         {
                             string sub = (string)((( (Dictionary<string, object>)item)["image"]));
                             string[] _name = sub.Split(name + "/");
-                            //Console.WriteLine(_name[1]);
                             names.Add(_name[1]);
                         }
                        
@@ -99,15 +98,14 @@ namespace FarmSimulator.Managers.TileHandler
 
                         string[] parts = sub.Split("Assets/");
                         string name = (string)lun["name"];
-                        //Console.WriteLine(parts[1]);
-                        //Console.WriteLine((int)lun["firstgid"]);
-
 
                         TileInfo tileinfo = new TileInfo(
                             firstGID: (int)lun["firstgid"],
                             name: name,
                             path: parts[1],
-                            isCollection: false
+                            isCollection: false,
+                            width: (int)lun["imagewidth"],
+                            height: (int)lun["imageheight"]
                             );
                         
                         _tileDict.Add(name, tileinfo);
