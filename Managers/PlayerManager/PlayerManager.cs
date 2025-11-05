@@ -137,7 +137,7 @@ namespace FarmSimulator.Managers.PlayerManager
                 frameWidth,
                 frameHeight
             );
-            sb.Draw(spritesheet, position, source, Color.Black);
+            sb.Draw(spritesheet, position, source, Color.White);
         }
     }
 }
