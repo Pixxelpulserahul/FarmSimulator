@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,8 +12,8 @@ namespace FarmSimulator.Managers.PlayerManager
         public float speed = 100f; // Set default speed
 
         // Animation Variables
-        private int frameWidth;
-        private int frameHeight;
+        public int frameWidth;
+        public int frameHeight;
         private float animationTimer;
         private float frameDuration = 0.15f;
         private int currentFrame = 0;
@@ -31,7 +32,7 @@ namespace FarmSimulator.Managers.PlayerManager
             frameWidth = frameW;
         }
 
-        public void Update(GameTime gameTime, Rectangle mapBounds)
+        public void Update(GameTime gameTime, Rectangle mapBounds, Dictionary<string, int[,]> tileData, int tileSize)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             KeyboardState k = Keyboard.GetState();
@@ -50,7 +51,7 @@ namespace FarmSimulator.Managers.PlayerManager
             }
             if (k.IsKeyDown(Keys.A) || k.IsKeyDown(Keys.Left))
             {
-                move.X -= 1; // FIXED: Was += 1
+                move.X -= 1;
                 currentRow = 1;
             }
             if (k.IsKeyDown(Keys.S) || k.IsKeyDown(Keys.Down))
@@ -64,11 +65,19 @@ namespace FarmSimulator.Managers.PlayerManager
             if (moving)
             {
                 move.Normalize();
-                position += move * speed * dt;
 
-                // Clamp player position to map bounds
-                position.X = MathHelper.Clamp(position.X, 0, mapBounds.Width - frameWidth);
-                position.Y = MathHelper.Clamp(position.Y, 0, mapBounds.Height - frameHeight);
+                // Calculate new position
+                Vector2 newPosition = position + move * speed * dt;
+
+                // Clamp to map bounds
+                newPosition.X = MathHelper.Clamp(newPosition.X, 0, mapBounds.Width - frameWidth);
+                newPosition.Y = MathHelper.Clamp(newPosition.Y, 0, mapBounds.Height - frameHeight);
+
+                // Check if new position is walkable
+                if (IsWalkable(newPosition, tileData, tileSize))
+                {
+                    position = newPosition; // Only update if walkable
+                }
 
                 // Animate
                 animationTimer += dt;
@@ -85,6 +94,41 @@ namespace FarmSimulator.Managers.PlayerManager
             }
         }
 
+        private bool IsWalkable(Vector2 pos, Dictionary<string, int[,]> tileData, int tileSize)
+        {
+            // Calculate tile coordinates for the player's center point
+            int tileX = (int)((pos.X + frameWidth / 2) / tileSize);
+            int tileY = (int)((pos.Y + frameHeight / 2) / tileSize);
+
+            // Check Fences layer
+            if (tileData.ContainsKey("Fences"))
+            {
+                int[,] fences = tileData["Fences"];
+
+                // Check bounds
+                if (tileY >= 0 && tileY < fences.GetLength(0) && tileX >= 0 && tileX < fences.GetLength(1))
+                {
+                    if (fences[tileY, tileX] != 0) // Non-zero means fence/blocked
+                        return false;
+                }
+            }
+
+            // Check Water layer
+            if (tileData.ContainsKey("Water"))
+            {
+                int[,] water = tileData["Water"];
+
+                // Check bounds
+                if (tileY >= 0 && tileY < water.GetLength(0) && tileX >= 0 && tileX < water.GetLength(1))
+                {
+                    if (water[tileY, tileX] != 0) // Non-zero means water/blocked
+                        return false;
+                }
+            }
+
+            return true; // Tile is walkable
+        }
+
         public void Draw(SpriteBatch sb)
         {
             Rectangle source = new Rectangle(
@@ -93,7 +137,7 @@ namespace FarmSimulator.Managers.PlayerManager
                 frameWidth,
                 frameHeight
             );
-            sb.Draw(spritesheet, position, source, Color.White);
+            sb.Draw(spritesheet, position, source, Color.Black);
         }
     }
 }

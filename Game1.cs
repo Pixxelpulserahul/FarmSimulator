@@ -69,7 +69,7 @@ namespace FarmSimulator
 
             _player = new PlayerManager(
                 playerSheet,
-                new Vector2(200, 200),
+                new Vector2(100,100),
                 frameW,
                 frameH
             );
@@ -109,8 +109,8 @@ namespace FarmSimulator
             // Define map bounds for player
             Rectangle mapBounds = new Rectangle(0, 0, mapWidth * tileSize, mapHeight * tileSize);
 
-            // Update player (handles movement and animation)
-            _player.Update(gameTime, mapBounds);
+            // Update player with collision data
+            _player.Update(gameTime, mapBounds, tileArranData, tileSize);
 
             // Update camera to follow player
             UpdateCameraFollowPlayer();
@@ -120,10 +120,14 @@ namespace FarmSimulator
             {
                 Console.WriteLine($"CameraPosition: {_camera.position}");
                 Console.WriteLine($"PlayerPosition: {_player.position}");
+                int playerTileX = (int)((_player.position.X + _player.frameWidth / 2) / tileSize);
+                int playerTileY = (int)((_player.position.Y + _player.frameHeight / 2) / tileSize);
+                Console.WriteLine($"PlayerTile: ({playerTileX}, {playerTileY})");
             }
 
             base.Update(gameTime);
         }
+
 
         private void UpdateCameraFollowPlayer()
         {
