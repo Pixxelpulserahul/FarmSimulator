@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Xml.Schema;
 using FarmSimulator.Managers.Camera;
 using FarmSimulator.Managers.MapLoader;
 using FarmSimulator.Managers.MapManager;
@@ -21,7 +22,9 @@ namespace FarmSimulator
         private SpriteBatch _spriteBatch;
 
         private Dictionary<string, TileInfo> spritesData;
+        private Dictionary<string, TileCollectionInfo> collectionSpriteData;
         private Dictionary<string, Texture2D> sprites;
+        private Dictionary<string, Texture2D[]> spritesCollection;
         private Dictionary<string, int[,]> tileArranData;
 
         int tileSize;
@@ -32,6 +35,15 @@ namespace FarmSimulator
         private MapManager _mapManager;
         private Camera _camera;
         private PlayerManager _player;
+
+        
+        private FieldManager _fieldManager;
+        private InventorySystem _inventorySystem;
+
+        Tomato _tomato;
+        Orange _orange;
+        Potato _potato;
+        Corn _corn;
 
         public Game1()
         {
@@ -76,7 +88,9 @@ namespace FarmSimulator
 
             _mapManager.GettingStarted(_mapPath);
             spritesData = _mapManager.getTileData();
+            
             tileArranData = _mapManager.getTileArranData();
+
 
             try
             {
@@ -87,11 +101,20 @@ namespace FarmSimulator
                         if (!item.Value.isCollection)
                         {
                             Texture2D temp = Content.Load<Texture2D>(item.Value.ImagePath.Split(".png")[0]);
-                            Console.WriteLine(item.Value.ImagePath.Split(".png")[0]);
+                            //Console.WriteLine(item.Value.ImagePath.Split(".png")[0]);
                             sprites.Add(item.Value.TileSetName, temp);
+                        }
+                        else
+                        {   //Here We will load the collection of tiles.
+                            Console.WriteLine(item.Value);
+
                         }
                     }
                 }
+
+                loadCropTexture();
+                loadInventoryTexture();
+                _fieldManager = new FieldManager(fieldData: tileArranData["FarmLand_Tile"], tomato: _tomato, corn: _corn, potato: _potato, orange: _orange);
             }
             catch (Exception e)
             {
@@ -114,6 +137,8 @@ namespace FarmSimulator
 
             // Update camera to follow player
             UpdateCameraFollowPlayer();
+            _inventorySystem.update(keyState);
+            _fieldManager.SowCrop(keyState, _player.position.X, _player.position.Y, _inventorySystem.currentItem, gameTime);
 
             // Debug key
             if (keyState.IsKeyDown(Keys.P))
@@ -124,6 +149,9 @@ namespace FarmSimulator
                 int playerTileY = (int)((_player.position.Y + _player.frameHeight / 2) / tileSize);
                 Console.WriteLine($"PlayerTile: ({playerTileX}, {playerTileY})");
             }
+
+            
+            
 
             base.Update(gameTime);
         }
@@ -145,6 +173,8 @@ namespace FarmSimulator
 
             _camera.position.X = MathHelper.Clamp(desiredCameraX, 0, maxCameraX);
             _camera.position.Y = MathHelper.Clamp(desiredCameraY, 0, maxCameraY);
+
+            //Console.WriteLine(_camera.position);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -152,12 +182,23 @@ namespace FarmSimulator
             GraphicsDevice.Clear(Color.Black);
 
             Matrix transformMatrix = Matrix.CreateTranslation(-_camera.position.X, -_camera.position.Y, 0);
+            
+            
             _spriteBatch.Begin(transformMatrix: transformMatrix, samplerState: SamplerState.PointClamp);
 
             drawMap(tileArranData);
             _player.Draw(_spriteBatch);
 
+
             _spriteBatch.End();
+
+
+            _spriteBatch.Begin(
+                samplerState: SamplerState.PointClamp
+                );
+            _inventorySystem.draw(_spriteBatch);
+            _spriteBatch.End();
+
             base.Draw(gameTime);
         }
 
@@ -201,12 +242,62 @@ namespace FarmSimulator
                             Vector2 worldPos = new Vector2(x * tileSize, y * tileSize);
 
                             Rectangle sourceRect = new Rectangle(srcx, srcy, tileSize, tileSize);
-
                             _spriteBatch.Draw(tempTexture, worldPos, sourceRect, Color.White);
+
+                            _fieldManager.cropsDraw(_spriteBatch, worldPos, x: x, y: y);
+
                         }
                     }
                 }
+                else
+                {
+                    //Console.WriteLine(info.TileSetName);
+                }
             }
         }
+
+
+        private void loadCropTexture()
+        {
+            try
+            {
+                Texture2D texture = Content.Load<Texture2D>("Crops/Tomato/Tomato");
+                _tomato = new Tomato(texture);
+
+                texture = Content.Load<Texture2D>("Crops/Corn/Corn");
+                _corn = new Corn(texture);
+
+                texture = Content.Load<Texture2D>("Crops/Potato/Potato");
+                _potato = new Potato(texture);
+
+                texture = Content.Load<Texture2D>("Crops/Orange/Orange");
+                _orange = new Orange(texture);
+
+                Console.WriteLine("Crops Texture Load Successfully");
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private void loadInventoryTexture()
+        {
+            try
+            {
+                Texture2D text = Content.Load<Texture2D>("Inventory/Inventory");
+                _inventorySystem = new InventorySystem(text, corn: _corn, tomato: _tomato, orange: _orange, potato: _potato);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"{e.Message}");
+            }
+        }
+
     }
 }
+
+
+
+
+

@@ -30,13 +30,13 @@ namespace FarmSimulator.Managers.MapManager
         private Dictionary<string, object> _map;
         private Dictionary<int, TileInfo> _tileDict;
 
-
         public MapManager()
         {
             this._tileHandler = new TileHandler.TileHandler();
             this._mapLoader = new MapLoader.MapLoader();
             this._map = new Dictionary<string, object>();
             this._tileDict = new Dictionary<int, TileInfo>();
+
             this.tilesArranData = new Dictionary<string, int[,]>();
         }
 

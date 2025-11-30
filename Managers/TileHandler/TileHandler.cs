@@ -44,6 +44,7 @@ namespace FarmSimulator.Managers.TileHandler
     public class TileHandler
     {
         Dictionary<string, TileInfo> _tileDict = new Dictionary<string, TileInfo>();
+        Dictionary<string, TileCollectionInfo> _tileCDict = new Dictionary<string, TileCollectionInfo>();
 
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace FarmSimulator.Managers.TileHandler
                 var lun = (((Dictionary<string, object>)tileSet));
 
                 // This if else refer to if the folowing object is collection of images
-                if (lun.ContainsKey("grid"))
+                if (lun.ContainsKey("tiles"))
                 {
                    
 
@@ -124,6 +125,11 @@ namespace FarmSimulator.Managers.TileHandler
         public Dictionary<string, TileInfo> getTileData()
         {
             return _tileDict;
+        }
+
+        public Dictionary<string, TileCollectionInfo> getCollectionOfTileData()
+        {
+            return _tileCDict;
         }
 
     }
