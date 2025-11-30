@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../Assets/Crops/Coin/Coin.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../Assets/Crops/Coin/Coin.png;Crops/Coin/Coin.png
+
 #begin ../../Assets/Crops/Tomato/Tomato.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -72,6 +84,13 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Crops/Potato/Potato.png
+
+#begin Fonts/File.spritefont
+/importer:FontDescriptionImporter
+/processor:LocalizedFontProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/File.spritefont
 
 #begin Inventory/Inventory.png
 /importer:TextureImporter

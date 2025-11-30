@@ -22,7 +22,7 @@ namespace FarmSimulator
             this.texture = text;
             this.height = texture.Height;
             this.width = texture.Width;
-            numberOfItems = 0;
+            numberOfItems = 10;
         }
 
         public void increaseItem(int num = 1)
@@ -33,6 +33,11 @@ namespace FarmSimulator
         public void decreaseItem(int num = 1)
         {
             numberOfItems -= num;
+        }
+
+        public string item()
+        {
+            return numberOfItems.ToString();
         }
     }
 }

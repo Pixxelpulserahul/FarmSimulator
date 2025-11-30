@@ -7,19 +7,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarmSimulator
 {
-    public class Tomato
+    public class Coin
     {
         public Texture2D texture;
         public int height;
         public int width;
         public int numberOfItems;
 
-        public Tomato(Texture2D text)
+        public Coin(Texture2D text)
         {
             this.texture = text;
             this.height = texture.Height;
             this.width = texture.Width;
-            this.numberOfItems = 10;
+            numberOfItems = 50;
         }
 
         public void increaseItem(int num = 1)

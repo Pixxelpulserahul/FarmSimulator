@@ -22,10 +22,9 @@ namespace FarmSimulator
         private SpriteBatch _spriteBatch;
 
         private Dictionary<string, TileInfo> spritesData;
-        private Dictionary<string, TileCollectionInfo> collectionSpriteData;
         private Dictionary<string, Texture2D> sprites;
-        private Dictionary<string, Texture2D[]> spritesCollection;
         private Dictionary<string, int[,]> tileArranData;
+        private SpriteFont _font;
 
         int tileSize;
 
@@ -44,6 +43,7 @@ namespace FarmSimulator
         Orange _orange;
         Potato _potato;
         Corn _corn;
+        Coin _coin;
 
         public Game1()
         {
@@ -106,15 +106,17 @@ namespace FarmSimulator
                         }
                         else
                         {   //Here We will load the collection of tiles.
-                            Console.WriteLine(item.Value);
+                            //Console.WriteLine(item.Value);
 
                         }
                     }
                 }
 
                 loadCropTexture();
+                _font = Content.Load<SpriteFont>("Fonts/File");
                 loadInventoryTexture();
                 _fieldManager = new FieldManager(fieldData: tileArranData["FarmLand_Tile"], tomato: _tomato, corn: _corn, potato: _potato, orange: _orange);
+
             }
             catch (Exception e)
             {
@@ -149,10 +151,6 @@ namespace FarmSimulator
                 int playerTileY = (int)((_player.position.Y + _player.frameHeight / 2) / tileSize);
                 Console.WriteLine($"PlayerTile: ({playerTileX}, {playerTileY})");
             }
-
-            
-            
-
             base.Update(gameTime);
         }
 
@@ -174,7 +172,6 @@ namespace FarmSimulator
             _camera.position.X = MathHelper.Clamp(desiredCameraX, 0, maxCameraX);
             _camera.position.Y = MathHelper.Clamp(desiredCameraY, 0, maxCameraY);
 
-            //Console.WriteLine(_camera.position);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -273,6 +270,9 @@ namespace FarmSimulator
                 texture = Content.Load<Texture2D>("Crops/Orange/Orange");
                 _orange = new Orange(texture);
 
+                texture = Content.Load<Texture2D>("Crops/Coin/Coin");
+                _coin = new Coin(texture);
+
                 Console.WriteLine("Crops Texture Load Successfully");
             }
             catch(Exception e)
@@ -286,7 +286,7 @@ namespace FarmSimulator
             try
             {
                 Texture2D text = Content.Load<Texture2D>("Inventory/Inventory");
-                _inventorySystem = new InventorySystem(text, corn: _corn, tomato: _tomato, orange: _orange, potato: _potato);
+                _inventorySystem = new InventorySystem(text, font: _font, corn: _corn, tomato: _tomato, orange: _orange, potato: _potato, coin: _coin);
             }
             catch(Exception e)
             {

@@ -76,16 +76,17 @@ namespace FarmSimulator
 
             if (KS.IsKeyDown(Keys.L))
             {
-                bool canSowTomato = (cornData[locY, locX] == 0) && (potatoData[locY, locX] == 0) && (orangeData[locY, locX] == 0) && (fieldData[locY, locX] != 0) && (currentItem == "Tomato") && (tomatoData[locY, locX] < 1);
-                bool canSowCorn = (tomatoData[locY, locX] == 0) && (potatoData[locY, locX] == 0) && (orangeData[locY, locX] == 0) && (fieldData[locY, locX] != 0) && (currentItem == "Corn") && (cornData[locY, locX] < 1);
-                bool canSowOrange = (tomatoData[locY, locX] == 0) && (potatoData[locY, locX] == 0) && (cornData[locY, locX] == 0) && (fieldData[locY, locX] != 0) && (currentItem == "Orange") && (orangeData[locY, locX] < 1);
-                bool canSowPotato = (tomatoData[locY, locX] == 0) && (cornData[locY, locX] == 0) && (orangeData[locY, locX] == 0) && (fieldData[locY, locX] != 0) && (currentItem == "Potato") && (potatoData[locY, locX] < 1);
+                bool canSowTomato = (cornData[locY, locX] == 0) && (potatoData[locY, locX] == 0) && (orangeData[locY, locX] == 0) && (fieldData[locY, locX] != 0) && (currentItem == "Tomato") && (tomatoData[locY, locX] < 1) && (_tomato.numberOfItems > 0);
+                bool canSowCorn = (tomatoData[locY, locX] == 0) && (potatoData[locY, locX] == 0) && (orangeData[locY, locX] == 0) && (fieldData[locY, locX] != 0) && (currentItem == "Corn") && (cornData[locY, locX] < 1) && (_corn.numberOfItems > 0);
+                bool canSowOrange = (tomatoData[locY, locX] == 0) && (potatoData[locY, locX] == 0) && (cornData[locY, locX] == 0) && (fieldData[locY, locX] != 0) && (currentItem == "Orange") && (orangeData[locY, locX] < 1) && (_orange.numberOfItems > 0);
+                bool canSowPotato = (tomatoData[locY, locX] == 0) && (cornData[locY, locX] == 0) && (orangeData[locY, locX] == 0) && (fieldData[locY, locX] != 0) && (currentItem == "Potato") && (potatoData[locY, locX] < 1) && (_potato.numberOfItems > 0);
 
                 if (canSowTomato)
                 {
                     Console.WriteLine($"x:{locX} y:{locY}");
                     tomatoData[locY, locX] = 4;
                     plantedCrops.Add(new Microsoft.Xna.Framework.Point(locY, locX));
+                    _tomato.decreaseItem();
                 }
 
                 if (canSowCorn)
@@ -93,6 +94,7 @@ namespace FarmSimulator
                     Console.WriteLine($"x:{locX} y:{locY}");
                     cornData[locY, locX] = 4;
                     plantedCrops.Add(new Microsoft.Xna.Framework.Point(locY, locX));
+                    _corn.decreaseitem();
 
                 }
 
@@ -101,7 +103,7 @@ namespace FarmSimulator
                     Console.WriteLine($"x:{locX} y:{locY}");
                     potatoData[locY, locX] = 4;
                     plantedCrops.Add(new Microsoft.Xna.Framework.Point(locY, locX));
-
+                    _potato.decreaseItem();
                 }
 
                 if (canSowOrange)
@@ -109,6 +111,7 @@ namespace FarmSimulator
                     Console.WriteLine($"x:{locX} y:{locY}");
                     orangeData[locY, locX] = 4;
                     plantedCrops.Add(new Microsoft.Xna.Framework.Point(locY, locX));
+                    _orange.decreaseItem();
                 }
             }
          }
