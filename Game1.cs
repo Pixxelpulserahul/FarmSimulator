@@ -101,13 +101,7 @@ namespace FarmSimulator
                         if (!item.Value.isCollection)
                         {
                             Texture2D temp = Content.Load<Texture2D>(item.Value.ImagePath.Split(".png")[0]);
-                            //Console.WriteLine(item.Value.ImagePath.Split(".png")[0]);
                             sprites.Add(item.Value.TileSetName, temp);
-                        }
-                        else
-                        {   //Here We will load the collection of tiles.
-                            //Console.WriteLine(item.Value);
-
                         }
                     }
                 }
@@ -120,7 +114,7 @@ namespace FarmSimulator
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("Lamao Dead");
             }
         }
 
@@ -138,9 +132,11 @@ namespace FarmSimulator
             _player.Update(gameTime, mapBounds, tileArranData, tileSize);
 
             // Update camera to follow player
+
             UpdateCameraFollowPlayer();
             _inventorySystem.update(keyState);
             _fieldManager.SowCrop(keyState, _player.position.X, _player.position.Y, _inventorySystem.currentItem, gameTime);
+            _fieldManager.HarvestCrop(keyState, _player.position);
 
             // Debug key
             if (keyState.IsKeyDown(Keys.P))
@@ -205,6 +201,7 @@ namespace FarmSimulator
             {
                 int[,] map = layer.Value;
                 string layerName = layer.Key;
+
                 TileInfo info = spritesData[layerName];
 
                 if (info.isCollection == false)
@@ -296,8 +293,3 @@ namespace FarmSimulator
 
     }
 }
-
-
-
-
-

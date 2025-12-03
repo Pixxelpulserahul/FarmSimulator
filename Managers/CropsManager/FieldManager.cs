@@ -27,9 +27,10 @@ namespace FarmSimulator
         private string inventory;
         
         private float timer = 0;
-        
-        private List<Microsoft.Xna.Framework.Point> plantedCrops = new List<Microsoft.Xna.Framework.Point>();
 
+        Random rand = new Random();
+        
+        private Dictionary<string, Microsoft.Xna.Framework.Vector2> plantedCrop = new Dictionary<string, Microsoft.Xna.Framework.Vector2>();
 
         public FieldManager(int[,] fieldData, Tomato tomato, Corn corn, Potato potato, Orange orange)
         {
@@ -50,26 +51,22 @@ namespace FarmSimulator
             int locX = (int)playerPosX / 16;
             int locY = (int)playerPosY / 16;
 
-
             inventory = currentItem;
 
             timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             
             if(timer > 5f)
             {
-                foreach (var e in plantedCrops)
-                {
-                    int xCor = e.X;
-                    int yCor = e.Y;
 
-                    if (tomatoData[xCor, yCor] > 1) tomatoData[xCor, yCor] -= 1;
-                    if (cornData[xCor, yCor] > 1) cornData[yCor, xCor] -= 1;
-                    if (potatoData[xCor, yCor] > 1) potatoData[xCor, yCor] -= 1;
-                    if (orangeData[xCor, yCor] > 1) orangeData[xCor, yCor] -= 1;
-                    
+                foreach (var (key, value) in plantedCrop)
+                {
+                    if (tomatoData[(int)value.X, (int)value.Y] > 1) tomatoData[(int)value.X, (int)value.Y] -= 1;
+                    if (cornData[(int)value.X, (int)value.Y] > 1) cornData[(int)value.X, (int)value.Y] -= 1;
+                    if (potatoData[(int)value.X, (int)value.Y] > 1) potatoData[(int)value.X, (int)value.Y] -= 1;
+                    if (orangeData[(int)value.X, (int)value.Y] > 1) orangeData[(int)value.X, (int)value.Y] -= 1;
                 }
+
                 timer = 0f;
-                Console.WriteLine(tomatoData[14, 19]);
                 Console.WriteLine("Timer Reset!!!!");
             }
 
@@ -83,38 +80,81 @@ namespace FarmSimulator
 
                 if (canSowTomato)
                 {
-                    Console.WriteLine($"x:{locX} y:{locY}");
                     tomatoData[locY, locX] = 4;
-                    plantedCrops.Add(new Microsoft.Xna.Framework.Point(locY, locX));
+                    plantedCrop.Add(new Microsoft.Xna.Framework.Vector2(locY, locX).ToString(), new Microsoft.Xna.Framework.Vector2(locY, locX));
                     _tomato.decreaseItem();
                 }
 
                 if (canSowCorn)
                 {
-                    Console.WriteLine($"x:{locX} y:{locY}");
                     cornData[locY, locX] = 4;
-                    plantedCrops.Add(new Microsoft.Xna.Framework.Point(locY, locX));
+                    plantedCrop.Add(new Microsoft.Xna.Framework.Vector2(locY, locX).ToString(), new Microsoft.Xna.Framework.Vector2(locY, locX));
                     _corn.decreaseitem();
 
                 }
 
                 if (canSowPotato)
                 {
-                    Console.WriteLine($"x:{locX} y:{locY}");
                     potatoData[locY, locX] = 4;
-                    plantedCrops.Add(new Microsoft.Xna.Framework.Point(locY, locX));
+                    plantedCrop.Add(new Microsoft.Xna.Framework.Vector2(locY, locX).ToString(), new Microsoft.Xna.Framework.Vector2(locY, locX));
+
                     _potato.decreaseItem();
                 }
 
                 if (canSowOrange)
                 {
-                    Console.WriteLine($"x:{locX} y:{locY}");
                     orangeData[locY, locX] = 4;
-                    plantedCrops.Add(new Microsoft.Xna.Framework.Point(locY, locX));
+                    plantedCrop.Add(new Microsoft.Xna.Framework.Vector2(locY, locX).ToString(), new Microsoft.Xna.Framework.Vector2(locY, locX));
                     _orange.decreaseItem();
                 }
             }
-         }
+        }
+
+        public void HarvestCrop(KeyboardState ks, Microsoft.Xna.Framework.Vector2 pos)
+        {
+
+            if(ks.IsKeyDown(Keys.H))
+            {
+                int x = (int)(pos.X / 16);
+                int y = (int)(pos.Y / 16);
+
+                Console.WriteLine($"Corn data = {cornData[y, x]}");
+
+                if (cornData[y, x] == 1)
+                {
+                    int num = rand.Next(1, 2);
+                    cornData[y, x] = 0;
+                    plantedCrop.Remove(new Microsoft.Xna.Framework.Vector2(y, x).ToString());
+                    _corn.increaseItem(num);
+                }
+
+                if (tomatoData[y, x] == 1)
+                {
+                    int num = rand.Next(1, 2);
+                    tomatoData[y, x] = 0;
+                    plantedCrop.Remove(new Microsoft.Xna.Framework.Vector2(y, x).ToString());
+                    _tomato.increaseItem(num);
+                }
+
+                if (potatoData[y, x] == 1)
+                {
+                    int num = rand.Next(1, 2);
+                    plantedCrop.Remove(new Microsoft.Xna.Framework.Vector2(y, x).ToString());
+                    potatoData[y, x] = 0;
+                    _potato.increaseItem(num);
+                }
+
+                if (orangeData[y, x] == 1)
+                {
+                    int num = rand.Next(1, 2);
+                    orangeData[y, x] = 0;
+                    _orange.increaseItem(num);
+                    plantedCrop.Remove(new Microsoft.Xna.Framework.Vector2(y, x).ToString());
+                }
+
+            }
+        }
+
 
         public void cropsDraw(SpriteBatch _spriteBatch, Microsoft.Xna.Framework.Vector2 worldPos, int x, int y)
         {

@@ -37,6 +37,7 @@ namespace FarmSimulator
 
         public void update(KeyboardState KS)
         {
+
             if (KS.IsKeyDown(Keys.D1))
             {
                 currentIndex = 1;
@@ -65,6 +66,7 @@ namespace FarmSimulator
         {
             Rectangle rect = new Rectangle(0, 0, 16, 16);
             _spritebatch.Draw(texture, inventorySysPos, null, Color.White, 0f, Vector2.Zero, 2.5f, SpriteEffects.None, 0f);
+            _spritebatch.Draw(texture, new Vector2(inventorySysPos.X + 300, inventorySysPos.Y), null, Color.White, 0f, Vector2.Zero, 2.5f, SpriteEffects.None, 0f);
 
             if (currentItem == "Corn")
             {

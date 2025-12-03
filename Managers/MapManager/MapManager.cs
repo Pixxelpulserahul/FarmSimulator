@@ -21,7 +21,7 @@ namespace FarmSimulator.Managers.MapManager
         private TileHandler.TileHandler _tileHandler;
 
         //This has to be fixed according to map layers and size of the map if anything changes in the map data you have to change it here too..
-        private const int layerCnt = 12;
+        private const int layerCnt = 13;
         private const int mapHeight = 200;
         private const int mapWidth = 300;
 

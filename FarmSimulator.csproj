@@ -29,6 +29,13 @@
   <ItemGroup>
     <None Remove="Assets\Maps\Map.json" />
     <None Remove="Content\Crops\Tomato\Tomato.png" />
+    <None Remove="Content\Tiles\Shadows\1.png" />
+    <None Remove="Content\Tiles\Shadows\2.png" />
+    <None Remove="Content\Tiles\Shadows\3.png" />
+    <None Remove="Content\Tiles\Shadows\4.png" />
+    <None Remove="Content\Tiles\Shadows\5.png" />
+    <None Remove="Content\Tiles\Shadows\6.png" />
+    <None Remove="Content\Tiles\Shadows\Shadow.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Maps\Map.json">

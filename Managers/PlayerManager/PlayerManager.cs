@@ -103,12 +103,11 @@ namespace FarmSimulator.Managers.PlayerManager
             // Check Fences layer
             if (tileData.ContainsKey("Fences"))
             {
-                int[,] fences = tileData["Fences"];
 
                 // Check bounds
-                if (tileY >= 0 && tileY < fences.GetLength(0) && tileX >= 0 && tileX < fences.GetLength(1))
+                if (tileY >= 0 && tileY < tileData["Fences"].GetLength(0) && tileX >= 0 && tileX < tileData["Fences"].GetLength(1))
                 {
-                    if (fences[tileY, tileX] != 0) // Non-zero means fence/blocked
+                    if (tileData["Fences"][tileY, tileX] != 0) // Non-zero means fence/blocked
                         return false;
                 }
             }
@@ -116,15 +115,23 @@ namespace FarmSimulator.Managers.PlayerManager
             // Check Water layer
             if (tileData.ContainsKey("Water"))
             {
-                int[,] water = tileData["Water"];
-
                 // Check bounds
-                if (tileY >= 0 && tileY < water.GetLength(0) && tileX >= 0 && tileX < water.GetLength(1))
+                if (tileY >= 0 && tileY < tileData["Water"].GetLength(0) && tileX >= 0 && tileX < tileData["Water"].GetLength(1))
                 {
-                    if (water[tileY, tileX] != 0) // Non-zero means water/blocked
+                    if (tileData["Water"][tileY, tileX] != 0) // Non-zero means water/blocked
                         return false;
                 }
             }
+
+            if (tileData.ContainsKey("Houses"))
+            {
+                if (tileY >= 0 && tileY < tileData["Houses"].GetLength(0) && tileX >= 0 && tileX < tileData["Houses"].GetLength(1))
+                {
+                    if (tileData["Houses"][tileY, tileX] != 0) // Non-zero means water/blocked
+                        return false;
+                }
+            }
+
 
             return true; // Tile is walkable
         }
