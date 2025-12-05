@@ -13,13 +13,15 @@ namespace FarmSimulator
         public int height;
         public int width;
         public int numberOfItems;
+        public int numberOfSeeds;
 
         public Corn(Texture2D text)
         {
             this.texture = text;
             this.height = texture.Height;
             this.width = texture.Width;
-            numberOfItems = 10;
+            this.numberOfItems = 10;
+            this.numberOfSeeds = 10;
         }
 
         public void increaseItem(int num = 1)
@@ -30,6 +32,21 @@ namespace FarmSimulator
         public void decreaseitem(int num = 1)
         {
             numberOfItems -= num;
+        }
+
+        public void increaseSeeds(int num = 1)
+        {
+            numberOfSeeds += num;
+        }
+
+        public void decreaseSeeds(int num = 1)
+        {
+            numberOfSeeds -= num;
+        }
+
+        public string seeds()
+        {
+            return numberOfSeeds.ToString();
         }
 
         public string items()

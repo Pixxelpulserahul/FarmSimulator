@@ -81,7 +81,7 @@ namespace FarmSimulator
 
             _player = new PlayerManager(
                 playerSheet,
-                new Vector2(100,100),
+                new Vector2(80, 80),
                 frameW,
                 frameH
             );

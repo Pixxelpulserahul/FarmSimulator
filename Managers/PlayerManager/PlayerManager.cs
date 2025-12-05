@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -42,22 +43,22 @@ namespace FarmSimulator.Managers.PlayerManager
             if (k.IsKeyDown(Keys.D) || k.IsKeyDown(Keys.Right))
             {
                 move.X += 1;
-                currentRow = 2;
+                currentRow = 1;
             }
             if (k.IsKeyDown(Keys.W) || k.IsKeyDown(Keys.Up))
             {
                 move.Y -= 1;
-                currentRow = 3;
+                currentRow = 2;
             }
             if (k.IsKeyDown(Keys.A) || k.IsKeyDown(Keys.Left))
             {
                 move.X -= 1;
-                currentRow = 1;
+                currentRow = 0;
             }
             if (k.IsKeyDown(Keys.S) || k.IsKeyDown(Keys.Down))
             {
                 move.Y += 1;
-                currentRow = 0;
+                currentRow = 3;
             }
 
             bool moving = move != Vector2.Zero;
@@ -81,10 +82,12 @@ namespace FarmSimulator.Managers.PlayerManager
 
                 // Animate
                 animationTimer += dt;
+                //Console.WriteLine(animationTimer);
                 if (animationTimer >= frameDuration)
                 {
                     animationTimer = 0;
                     currentFrame = (currentFrame + 1) % walkFrameCount;
+                    //Console.WriteLine(currentFrame);
                 }
             }
             else

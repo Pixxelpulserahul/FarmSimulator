@@ -28,7 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\Maps\Map.json" />
-    <None Remove="Content\Crops\Tomato\Tomato.png" />
     <None Remove="Content\Tiles\Shadows\1.png" />
     <None Remove="Content\Tiles\Shadows\2.png" />
     <None Remove="Content\Tiles\Shadows\3.png" />
@@ -45,7 +44,6 @@
   <ItemGroup>
     <Folder Include="Assets\Crops\Pea\" />
     <Folder Include="Content\bin\DesktopGL\Content\" />
-    <Folder Include="Content\Crops\Tomato\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="CollectPackageReferences">
     <Message Text="Restoring dotnet tools (this might take a while depending on your internet speed and should only happen upon building your project for the first time, or after upgrading MonoGame, or clearing your nuget cache)" Importance="High" />
