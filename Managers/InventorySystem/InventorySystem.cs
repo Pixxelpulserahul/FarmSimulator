@@ -33,7 +33,7 @@ namespace FarmSimulator
             this._corn = corn;
             this._font = font;
             this._coin = coin;
-         }
+        }
 
         public void update(KeyboardState KS)
         {
@@ -134,8 +134,7 @@ namespace FarmSimulator
                 _spritebatch.DrawString(spriteFont: _font, _corn.items(), new Vector2(inventorySysPos.X + 300 + 55, inventorySysPos.Y + 40), Color.White);
                 _spritebatch.DrawString(spriteFont: _font, _potato.item(), new Vector2(inventorySysPos.X + 300 + 95, inventorySysPos.Y + 40), Color.White);
                 _spritebatch.DrawString(spriteFont: _font, _orange.item(), new Vector2(inventorySysPos.X + 300 + 140, inventorySysPos.Y + 40), Color.White);
-
-
+                
             }
             catch (Exception e)
             {

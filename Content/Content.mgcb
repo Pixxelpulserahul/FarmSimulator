@@ -49,6 +49,42 @@
 /processorParam:TextureFormat=Color
 /build:../Assets/Player/Player.png;Player/Player.png
 
+#begin Animals/ButterFly/ButterFly.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Animals/ButterFly/ButterFly.png
+
+#begin Animals/Chicken/Chicken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Animals/Chicken/Chicken.png
+
+#begin Animals/Cow/Cow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Animals/Cow/Cow.png
+
 #begin Crops/Corn/Corn.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -115,6 +151,36 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Inventory/Inventory.png
+
+#begin Market/Market.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Market/Market.png
+
+#begin SoundTracks/Chicken/Chicken.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundTracks/Chicken/Chicken.mp3
+
+#begin SoundTracks/Cow/Cow.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundTracks/Cow/Cow.mp3
+
+#begin SoundTracks/MineCraft/MineCraft.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundTracks/MineCraft/MineCraft.mp3
 
 #begin Tiles/Basic_Furniture/Basic_Furniture.png
 /importer:TextureImporter

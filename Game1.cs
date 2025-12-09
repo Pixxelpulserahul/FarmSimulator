@@ -5,12 +5,17 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Xml.Schema;
+using FarmSimulator.Managers;
+using FarmSimulator.Managers.AnimalManager;
+using FarmSimulator.Managers.AnimalManager.Cow;
+using FarmSimulator.Managers.Audio;
 using FarmSimulator.Managers.Camera;
 using FarmSimulator.Managers.MapLoader;
 using FarmSimulator.Managers.MapManager;
 using FarmSimulator.Managers.PlayerManager;
 using FarmSimulator.Managers.TileHandler;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -38,6 +43,12 @@ namespace FarmSimulator
         
         private FieldManager _fieldManager;
         private InventorySystem _inventorySystem;
+        private Market _market;
+
+        //private Chicken _chicken;
+        private ChickenManager _chickenManager;
+        private CowManager _cowManager;
+        private ButterflyManager _butterflyManager;
 
         Tomato _tomato;
         Orange _orange;
@@ -88,7 +99,7 @@ namespace FarmSimulator
 
             _mapManager.GettingStarted(_mapPath);
             spritesData = _mapManager.getTileData();
-            
+
             tileArranData = _mapManager.getTileArranData();
 
 
@@ -106,17 +117,27 @@ namespace FarmSimulator
                     }
                 }
 
+                Console.WriteLine("Gotcha");
                 loadCropTexture();
                 _font = Content.Load<SpriteFont>("Fonts/File");
                 loadInventoryTexture();
                 _fieldManager = new FieldManager(fieldData: tileArranData["FarmLand_Tile"], tomato: _tomato, corn: _corn, potato: _potato, orange: _orange);
 
+                if(_fieldManager == null)
+                {
+                    Console.WriteLine("fieldManager is null");
+                }
+
+                loadMarketTexture();
+                //LoadSoundTracks();
             }
             catch (Exception e)
             {
-                Console.WriteLine("Lamao Dead");
+                Console.WriteLine(e.Message);
             }
         }
+
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -125,28 +146,30 @@ namespace FarmSimulator
 
             KeyboardState keyState = Keyboard.GetState();
 
-            // Define map bounds for player
             Rectangle mapBounds = new Rectangle(0, 0, mapWidth * tileSize, mapHeight * tileSize);
 
-            // Update player with collision data
             _player.Update(gameTime, mapBounds, tileArranData, tileSize);
 
-            // Update camera to follow player
 
             UpdateCameraFollowPlayer();
-            _inventorySystem.update(keyState);
-            _fieldManager.SowCrop(keyState, _player.position.X, _player.position.Y, _inventorySystem.currentItem, gameTime);
-            _fieldManager.HarvestCrop(keyState, _player.position);
 
-            // Debug key
-            if (keyState.IsKeyDown(Keys.P))
+            try
             {
-                Console.WriteLine($"CameraPosition: {_camera.position}");
-                Console.WriteLine($"PlayerPosition: {_player.position}");
-                int playerTileX = (int)((_player.position.X + _player.frameWidth / 2) / tileSize);
-                int playerTileY = (int)((_player.position.Y + _player.frameHeight / 2) / tileSize);
-                Console.WriteLine($"PlayerTile: ({playerTileX}, {playerTileY})");
+                _inventorySystem.update(keyState);
+
+
+                _fieldManager.SowCrop(keyState, _player.position.X, _player.position.Y, _inventorySystem.currentItem, gameTime);
+                _fieldManager.HarvestCrop(keyState, _player.position);
+                _chickenManager.Update(gameTime);
+                _cowManager.Update(gameTime);
+                _butterflyManager.Update(gameTime);
+                _market.update();
             }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Error is here {e.Message}");
+            }
+
             base.Update(gameTime);
         }
 
@@ -176,20 +199,24 @@ namespace FarmSimulator
 
             Matrix transformMatrix = Matrix.CreateTranslation(-_camera.position.X, -_camera.position.Y, 0);
             
-            
+            //Draw with camera Transition
             _spriteBatch.Begin(transformMatrix: transformMatrix, samplerState: SamplerState.PointClamp);
 
             drawMap(tileArranData);
             _player.Draw(_spriteBatch);
-
+            _chickenManager.Draw(_spriteBatch);
+            _cowManager.Draw(_spriteBatch);
+            _butterflyManager.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
 
+            //Static draw
             _spriteBatch.Begin(
                 samplerState: SamplerState.PointClamp
                 );
             _inventorySystem.draw(_spriteBatch);
+            _market.Draw(_spriteBatch, _font);
             _spriteBatch.End();
 
             base.Draw(gameTime);
@@ -238,14 +265,15 @@ namespace FarmSimulator
                             Rectangle sourceRect = new Rectangle(srcx, srcy, tileSize, tileSize);
                             _spriteBatch.Draw(tempTexture, worldPos, sourceRect, Color.White);
 
-                            _fieldManager.cropsDraw(_spriteBatch, worldPos, x: x, y: y);
+                            //_fieldManager.cropsDraw(_spriteBatch, worldPos, x: x, y: y);
+
 
                         }
                     }
                 }
                 else
                 {
-                    //Console.WriteLine(info.TileSetName);
+                    Console.WriteLine(info.TileSetName);
                 }
             }
         }
@@ -287,8 +315,25 @@ namespace FarmSimulator
             }
             catch(Exception e)
             {
-                Console.WriteLine($"{e.Message}");
+                Console.WriteLine($" Inventory error: {e.Message}");
             }
+        }
+
+        private void loadMarketTexture()
+        {
+
+            Texture2D text = Content.Load<Texture2D>("Market/Market");
+            _market = new Market(text, corn: _corn, potato: _potato, tomato: _tomato, orange: _orange, coin: _coin);
+
+            
+            text = Content.Load<Texture2D>("Animals/Chicken/Chicken");
+            _chickenManager = new ChickenManager(text, mapWidth, mapHeight, tileSize, chickenCount: 6);
+
+            text = Content.Load<Texture2D>("Animals/Cow/Cow");
+            _cowManager = new CowManager(text, mapWidth, mapHeight, tileSize, cowCount: 5);
+
+            text = Content.Load<Texture2D>("Animals/ButterFly/ButterFly");
+            _butterflyManager = new ButterflyManager(text, mapWidth, mapHeight, butterflyCount: 16, tileSizeInPixels: 16);
         }
 
     }
