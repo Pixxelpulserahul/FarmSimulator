@@ -36,6 +36,8 @@ namespace FarmSimulator
         const int mapWidth = 300;
         const int mapHeight = 200;
 
+        private float timer;
+
         private MapManager _mapManager;
         private Camera _camera;
         private PlayerManager _player;
@@ -45,7 +47,8 @@ namespace FarmSimulator
         private InventorySystem _inventorySystem;
         private Market _market;
 
-        //private Chicken _chicken;
+        private SoundTrackManager _soundTrackManager;
+        
         private ChickenManager _chickenManager;
         private CowManager _cowManager;
         private ButterflyManager _butterflyManager;
@@ -128,8 +131,8 @@ namespace FarmSimulator
                     Console.WriteLine("fieldManager is null");
                 }
 
+                loadSoundTrack();
                 loadMarketTexture();
-                //LoadSoundTracks();
             }
             catch (Exception e)
             {
@@ -150,6 +153,17 @@ namespace FarmSimulator
 
             _player.Update(gameTime, mapBounds, tileArranData, tileSize);
 
+            timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if(timer == 0 || timer > 600f)
+            {
+                if (timer > 600f)
+                {
+                    timer = 0;
+                }
+                _soundTrackManager.Update(gameTime);
+                _soundTrackManager.PlaySound("minecraft");
+            }
 
             UpdateCameraFollowPlayer();
 
@@ -265,7 +279,7 @@ namespace FarmSimulator
                             Rectangle sourceRect = new Rectangle(srcx, srcy, tileSize, tileSize);
                             _spriteBatch.Draw(tempTexture, worldPos, sourceRect, Color.White);
 
-                            //_fieldManager.cropsDraw(_spriteBatch, worldPos, x: x, y: y);
+                            _fieldManager.cropsDraw(_spriteBatch, worldPos, x: x, y: y);
 
 
                         }
@@ -327,14 +341,22 @@ namespace FarmSimulator
 
             
             text = Content.Load<Texture2D>("Animals/Chicken/Chicken");
-            _chickenManager = new ChickenManager(text, mapWidth, mapHeight, tileSize, chickenCount: 6);
+            _chickenManager = new ChickenManager(text, mapWidth, mapHeight, tileSize, _soundTrack: _soundTrackManager ,chickenCount: 6);
 
             text = Content.Load<Texture2D>("Animals/Cow/Cow");
-            _cowManager = new CowManager(text, mapWidth, mapHeight, tileSize, cowCount: 5);
+            _cowManager = new CowManager(text, mapWidth, mapHeight, tileSize,_soundTrack: _soundTrackManager, cowCount: 5);
 
             text = Content.Load<Texture2D>("Animals/ButterFly/ButterFly");
             _butterflyManager = new ButterflyManager(text, mapWidth, mapHeight, butterflyCount: 16, tileSizeInPixels: 16);
         }
 
+        private void loadSoundTrack()
+        {
+            _soundTrackManager = new SoundTrackManager();
+
+            _soundTrackManager.RegisterSound("cow_moo", Content.Load<SoundEffect>("SoundTracks/Cow/Cow"));
+            _soundTrackManager.RegisterSound("chicken", Content.Load<SoundEffect>("SoundTracks/Chicken/Chicken"));
+            _soundTrackManager.RegisterSound("minecraft", Content.Load<SoundEffect>("SoundTracks/MineCraft/MineCraft"));
+        }
     }
 }

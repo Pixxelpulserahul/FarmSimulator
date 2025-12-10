@@ -183,15 +183,15 @@ namespace FarmSimulator.Managers.AnimalManager.Cow
         private List<Cow> cows;
         private Texture2D cowTexture;
         private Random random;
-        //private SoundTrackManager _soundTrackManager;
+        private SoundTrackManager _soundTrackManager;
 
         float timer;
 
 
-        public CowManager(Texture2D texture, int mapWidthInTiles, int mapHeightInTiles, int tileSizeInPixels, int cowCount = 5)
+        public CowManager(Texture2D texture, int mapWidthInTiles, int mapHeightInTiles, int tileSizeInPixels,SoundTrackManager _soundTrack, int cowCount = 5)
         {
             cowTexture = texture;
-            //_soundTrackManager = _soundtrack; 
+            _soundTrackManager = _soundTrack;
             random = new Random();
             timer = 0f;
             cows = new List<Cow>();
@@ -213,20 +213,19 @@ namespace FarmSimulator.Managers.AnimalManager.Cow
 
             timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            //if (timer > 5f)
-            //{
-            //    Console.WriteLine(timer);
-            //    playCowSound(gameTime);
-            //    timer = 0f;
-            //}
+            if (timer > 6f)
+            {
+                playCowSound(gameTime);
+                timer = 0f;
+            }
 
         }
 
-        //private void playCowSound(GameTime gameTime)
-        //{
-        //    _soundTrackManager.Update(gameTime);
-        //    _soundTrackManager.PlaySound("cow_moo");
-        //}
+        private void playCowSound(GameTime gameTime)
+        {
+            _soundTrackManager.Update(gameTime);
+            _soundTrackManager.PlaySound("cow_moo");
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {

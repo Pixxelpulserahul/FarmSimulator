@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
+using FarmSimulator.Managers.Audio;
 
 namespace FarmSimulator
 {
@@ -21,7 +22,7 @@ namespace FarmSimulator
         private double animationInterval = 0.15; // Time between frames in seconds
         private const int frameWidth = 16;
         private const int frameHeight = 16;
-        private const int framesPerRow = 4; // Assuming 4 frames per animation row
+        private const int framesPerRow = 4; 
 
         // Movement variables
         private Random random;
@@ -30,20 +31,14 @@ namespace FarmSimulator
         private double idleTimer;
         private double currentIdleDuration;
         private bool isWalking;
-        private float walkSpeed = 20f; // Pixels per second
+        private float walkSpeed = 20f;
 
-        // Map boundaries
         private int mapWidth;
         private int mapHeight;
         private int tileSize;
 
-        // Direction
         private bool facingRight = true;
 
-        // Audio (placeholder for future implementation)
-        // private SoundEffect cluckSound;
-        // private double cluckTimer;
-        // private double cluckInterval;
 
         public Chicken(Texture2D chickenTexture, int mapWidthInTiles, int mapHeightInTiles, int tileSizeInPixels, Random sharedRandom)
         {
@@ -84,25 +79,19 @@ namespace FarmSimulator
                 UpdateIdle(deltaTime);
             }
 
-            // Update animation
             UpdateAnimation(deltaTime);
 
-            // TODO: Uncomment when audio is added
-            // UpdateAudio(deltaTime);
         }
 
         private void UpdateWalking(double deltaTime)
         {
             movementTimer += deltaTime;
 
-            // Move the chicken
             position += velocity * (float)deltaTime;
 
-            // Keep chicken within map bounds
             position.X = MathHelper.Clamp(position.X, 0, (mapWidth * tileSize) - frameWidth);
             position.Y = MathHelper.Clamp(position.Y, 0, (mapHeight * tileSize) - frameHeight);
 
-            // Check if movement duration is over
             if (movementTimer >= currentMovementDuration)
             {
                 isWalking = false;
@@ -116,7 +105,6 @@ namespace FarmSimulator
         {
             idleTimer += deltaTime;
 
-            // Check if idle duration is over
             if (idleTimer >= currentIdleDuration)
             {
                 isWalking = true;
@@ -128,13 +116,12 @@ namespace FarmSimulator
 
         private void SetNewMovementDirection()
         {
-            // Random angle for movement
+
             float angle = (float)(random.NextDouble() * Math.PI * 2);
 
             velocity.X = (float)Math.Cos(angle) * walkSpeed;
             velocity.Y = (float)Math.Sin(angle) * walkSpeed;
 
-            // Determine facing direction based on velocity
             if (velocity.X > 0)
                 facingRight = true;
             else if (velocity.X < 0)
@@ -143,13 +130,12 @@ namespace FarmSimulator
 
         private void SetNewMovementDuration()
         {
-            // Walk for 1-4 seconds
+
             currentMovementDuration = 1.0 + (random.NextDouble() * 3.0);
         }
 
         private void SetNewIdleDuration()
         {
-            // Idle for 2-6 seconds
             currentIdleDuration = 2.0 + (random.NextDouble() * 4.0);
         }
 
@@ -161,7 +147,6 @@ namespace FarmSimulator
             {
                 animationTimer = 0;
 
-                // Advance frame
                 currentFrame++;
                 if (currentFrame >= framesPerRow)
                 {
@@ -170,35 +155,11 @@ namespace FarmSimulator
             }
         }
 
-        // TODO: Uncomment and implement when audio is added
-        /*
-        public void LoadAudio(SoundEffect cluck)
-        {
-            cluckSound = cluck;
-            cluckInterval = 3.0 + (random.NextDouble() * 5.0); // Cluck every 3-8 seconds
-        }
-        
-        private void UpdateAudio(double deltaTime)
-        {
-            if (cluckSound == null) return;
-            
-            cluckTimer += deltaTime;
-            
-            if (cluckTimer >= cluckInterval)
-            {
-                cluckSound.Play();
-                cluckTimer = 0;
-                cluckInterval = 3.0 + (random.NextDouble() * 5.0); // Random interval for next cluck
-            }
-        }
-        */
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            // Determine which row to use (0 = idle/resting, 1 = walking)
             int row = isWalking ? 1 : 0;
 
-            // Calculate source rectangle from sprite sheet
             Rectangle sourceRect = new Rectangle(
                 currentFrame * frameWidth,
                 row * frameHeight,
@@ -206,10 +167,8 @@ namespace FarmSimulator
                 frameHeight
             );
 
-            // Determine sprite effects for flipping
             SpriteEffects effect = facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            // Draw the chicken
             spriteBatch.Draw(
                 texture,
                 position,
@@ -230,12 +189,17 @@ namespace FarmSimulator
         private List<Chicken> chickens;
         private Texture2D chickenTexture;
         private Random random;
+        float timer;
+        private SoundTrackManager _soundTrackManager;
 
-        public ChickenManager(Texture2D texture, int mapWidthInTiles, int mapHeightInTiles, int tileSizeInPixels, int chickenCount = 6)
+
+        public ChickenManager(Texture2D texture, int mapWidthInTiles, int mapHeightInTiles, int tileSizeInPixels,SoundTrackManager _soundTrack, int chickenCount = 6)
         {
             chickenTexture = texture;
             random = new Random();
             chickens = new List<Chicken>();
+            timer = 0f;
+            _soundTrackManager = _soundTrack;
 
             // Spawn multiple chickens
             for (int i = 0; i < chickenCount; i++)
@@ -249,10 +213,26 @@ namespace FarmSimulator
 
         public void Update(GameTime gameTime)
         {
+            timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             foreach (var chicken in chickens)
             {
                 chicken.Update(gameTime);
             }
+
+            if (timer > 14f)
+            {
+                Console.WriteLine(timer);
+                playChickenSound(gameTime);
+                timer = 0f;
+            }
+
+        }
+
+        private void playChickenSound(GameTime gameTime)
+        {
+            _soundTrackManager.Update(gameTime);
+            _soundTrackManager.PlaySound("chicken");
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -263,18 +243,6 @@ namespace FarmSimulator
             }
         }
 
-        // Optional: Add audio to all chickens
-        /*
-        public void LoadAudio(SoundEffect cluckSound)
-        {
-            foreach (var chicken in chickens)
-            {
-                chicken.LoadAudio(cluckSound);
-            }
-        }
-        */
-
-        public int ChickenCount => chickens.Count;
-        public List<Chicken> GetChickens() => chickens;
+       
     }
 }
